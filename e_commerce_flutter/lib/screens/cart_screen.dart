@@ -26,8 +26,9 @@ class _CartScreenState extends State<CartScreen> {
 
     if (response.statusCode == 200) {
       final List jsonData = jsonDecode(response.body);
-      final fetchedProducts =
-          jsonData.map((item) => Product.fromJson(item)).toList();
+      final fetchedProducts = jsonData
+          .map((item) => Product.fromJson(item))
+          .toList();
       products = fetchedProducts;
       return fetchedProducts;
     } else {
@@ -54,8 +55,10 @@ class _CartScreenState extends State<CartScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          final totalItems =
-              products.fold(0, (sum, item) => sum + item.quantity);
+          final totalItems = products.fold(
+            0,
+            (sum, item) => sum + item.quantity,
+          );
           final totalPrice = products.fold(
             0.0,
             (sum, item) =>
@@ -75,6 +78,11 @@ class _CartScreenState extends State<CartScreen> {
                       return Dismissible(
                         key: Key(item.id.toString()),
                         direction: DismissDirection.endToStart,
+                        onDismissed: (_) {
+                          setState(() {
+                            products.removeAt(index);
+                          });
+                        },
                         background: Container(
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -87,7 +95,8 @@ class _CartScreenState extends State<CartScreen> {
                             builder: (context) => AlertDialog(
                               title: const Text("Are you sure?"),
                               content: const Text(
-                                  "Do you really want to remove this item from the cart?"),
+                                "Do you really want to remove this item from the cart?",
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () =>
@@ -96,27 +105,34 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red),
+                                    backgroundColor: Colors.red,
+                                  ),
                                   onPressed: () async {
                                     final uri = Uri.parse(
-                                        'http://10.0.2.2:8000/api/products/${item.id}');
+                                      'http://10.0.2.2:8000/api/products/${item.id}',
+                                    );
                                     final response = await http.delete(uri);
 
                                     if (response.statusCode == 200) {
-                                      Navigator.of(context)
-                                          .pop(true); // allow dismiss
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      Navigator.of(
+                                        context,
+                                      ).pop(true); // allow dismiss
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
-                                          content:
-                                              Text("Deleted successfully!"),
+                                          content: Text(
+                                            "Deleted successfully!",
+                                          ),
                                         ),
                                       );
                                     } else {
-                                      Navigator.of(context)
-                                          .pop(false); // cancel dismiss
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      Navigator.of(
+                                        context,
+                                      ).pop(false); // cancel dismiss
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
                                           content: Text("Failed to delete!"),
                                         ),
@@ -132,7 +148,8 @@ class _CartScreenState extends State<CartScreen> {
                         child: Card(
                           elevation: 2,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(12),
                             child: Row(
@@ -152,12 +169,16 @@ class _CartScreenState extends State<CartScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(item.name,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600)),
+                                      Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const SizedBox(height: 4),
                                       Text(
-                                          "\$${item.price.toStringAsFixed(2)}"),
+                                        "\$${item.price.toStringAsFixed(2)}",
+                                      ),
                                       const SizedBox(height: 8),
                                       Row(
                                         children: [
@@ -184,7 +205,8 @@ class _CartScreenState extends State<CartScreen> {
                                 Checkbox(
                                   value: item.selected,
                                   onChanged: (val) => setState(
-                                      () => item.selected = val ?? true),
+                                    () => item.selected = val ?? true,
+                                  ),
                                 ),
                               ],
                             ),
@@ -198,12 +220,16 @@ class _CartScreenState extends State<CartScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Items: ($totalItems)",
-                        style: const TextStyle(fontSize: 16)),
+                    Text(
+                      "Items: ($totalItems)",
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     Text(
                       "Total: \$${totalPrice.toStringAsFixed(2)}",
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -214,16 +240,15 @@ class _CartScreenState extends State<CartScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Checkout clicked"),
-                        ),
+                        const SnackBar(content: Text("Checkout clicked")),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: const Text("Checkout"),
                   ),
