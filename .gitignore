@@ -1,0 +1,19 @@
+# Laravel
+backend_laravel/.env
+backend_laravel/vendor/
+backend_laravel/node_modules/
+backend_laravel/storage/logs/
+backend_laravel/storage/framework/
+
+# Flutter
+e_commerce_flutter/build/
+e_commerce_flutter/.dart_tool/
+e_commerce_flutter/android/local.properties
+e_commerce_flutter/android/key.properties
+e_commerce_flutter/android/.gradle/
+
+# Keys and editor files
+*.jks
+*.keystore
+.vscode/
+.idea/
